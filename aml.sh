@@ -156,6 +156,7 @@ fi
 #3  remove_xml
 #3fi
 
+# function
 dap_proxy() {
 # store
 LIB=libswdap.so
