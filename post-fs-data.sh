@@ -18,6 +18,7 @@ chcon -R u:object_r:vendor_file:s0 $MODPATH/system/vendor
 chcon -R u:object_r:vendor_configs_file:s0 $MODPATH/system/vendor/etc
 chcon -R u:object_r:vendor_configs_file:s0 $MODPATH/system/vendor/odm/etc
 chcon u:object_r:hal_dms_default_exec:s0 $MODPATH/system/vendor/bin/hw/vendor.dolby.hardware.dms@*-service
+chcon u:object_r:hal_dms_default_exec:s0 $MODPATH/system/vendor/odm/bin/hw/vendor.dolby_v3_6.hardware.dms360@2.0-service
 
 # etc
 if [ -d /sbin/.magisk ]; then
@@ -143,16 +144,6 @@ if ! grep -A2 vendor.dolby.hardware.dms $FILE | grep 2.0; then
     mount -o bind $MODM /system/etc/vintf/manifest.xml
     killall hwservicemanager
   fi
-fi
-
-# AudioEffectCenter
-if [ -f /my_product/app/AudioEffectCenter/AudioEffectCenter.apk ]; then
-  mkdir $MODPATH/AudioEffectCenter
-  mount -o bind $MODPATH/AudioEffectCenter /my_product/app/AudioEffectCenter
-fi
-if [ -f /my_product/priv-app/AudioEffectCenter/AudioEffectCenter.apk ]; then
-  mkdir $MODPATH/AudioEffectCenter
-  mount -o bind $MODPATH/AudioEffectCenter /my_product/priv-app/AudioEffectCenter
 fi
 
 
