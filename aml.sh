@@ -25,12 +25,14 @@ for RMVS in $RMV; do
   sed -i "s/\"$RMVS\"/\"removed\"/g" $MODAEX
 done
 sed -i 's/<library name="removed" path="removed"\/>//g' $MODAEX
+sed -i 's/<library name="proxy" path="removed"\/>//g' $MODAEX
 sed -i 's/<effect name="removed" library="removed" uuid="removed"\/>//g' $MODAEX
 sed -i 's/<effect name="removed" uuid="removed" library="removed"\/>//g' $MODAEX
 sed -i 's/<libsw library="removed" uuid="removed"\/>//g' $MODAEX
 sed -i 's/<libhw library="removed" uuid="removed"\/>//g' $MODAEX
 sed -i 's/<apply effect="removed"\/>//g' $MODAEX
 sed -i 's/<library name="removed" path="removed" \/>//g' $MODAEX
+sed -i 's/<library name="proxy" path="removed" \/>//g' $MODAEX
 sed -i 's/<effect name="removed" library="removed" uuid="removed" \/>//g' $MODAEX
 sed -i 's/<effect name="removed" uuid="removed" library="removed" \/>//g' $MODAEX
 sed -i 's/<libsw library="removed" uuid="removed" \/>//g' $MODAEX
@@ -176,7 +178,8 @@ NAME=dap
 UUID=6ab06da4-c516-4611-8166-452799218539
 UUIDHW=a0c30891-8246-4aef-b8ad-d53e26da0253
 UUIDPROXY=9d4921da-8225-4f29-aefa-39537a04bcaa
-RMV="$LIB $LIBHW $LIBNAME $LIBNAMEHW $NAME $UUID $UUIDHW $UUIDPROXY"
+RMV="$LIB $LIBHW $LIBNAME $LIBNAMEHW $NAME $UUID
+     $UUIDHW $UUIDPROXY libeffectproxy.so"
 # patch audio effects conf
 if [ "$MODAEC" ]; then
   remove_conf
