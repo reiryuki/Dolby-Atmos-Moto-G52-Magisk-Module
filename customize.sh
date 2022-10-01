@@ -671,6 +671,20 @@ fi
 MODDIR=$MODPATH/system/product/priv-app/$APPS
 replace_dir
 if [ "$BOOTMODE" == true ]; then
+  DIR=/mnt/vendor/my_product/app/$APPS
+else
+  DIR=/my_product/app/$APPS
+fi
+MODDIR=$MODPATH/system/product/app/$APPS
+replace_dir
+if [ "$BOOTMODE" == true ]; then
+  DIR=/mnt/vendor/my_product/priv-app/$APPS
+else
+  DIR=/my_product/priv-app/$APPS
+fi
+MODDIR=$MODPATH/system/product/priv-app/$APPS
+replace_dir
+if [ "$BOOTMODE" == true ]; then
   DIR=$MAGISKTMP/mirror/product/preinstall/$APPS
 else
   DIR=/product/preinstall/$APPS
