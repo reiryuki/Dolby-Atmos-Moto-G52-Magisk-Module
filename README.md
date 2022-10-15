@@ -11,8 +11,6 @@
 
 ## Sources
 - https://dumps.tadiphone.dev/dumps/motorola/rhode user-12-S1SR32.38-124-3-a8403-release-keys
-- libswdap.so: Changed HEX fragment from da21499d2582294ffaae39537a04bcaa to a46db06a16c511466681452799218539
-- libhwdap.so: https://dumps.tadiphone.dev/dumps/redmi/alioth qssi-user-12-SKQ1.211006.001-V13.0.3.0.SKHEUXM-release-keys changed HEX fragment from da21499d2582294ffaae39537a04bcaa to 9108c3a04682ef4aadb8d53e26da0253
 - libswvqe.so: https://dumps.tadiphone.dev/dumps/redmi/alioth qssi-user-12-SKQ1.211006.001-V13.0.3.0.SKHEUXM-release-keys
 
 ## Screenshots
@@ -49,6 +47,7 @@
 ## Tested on
 - Android 12.1 Nusantara ROM
 - Android 13 Nusantara ROM
+- Android 13 AOSP ROM
 
 ## Credits and contributors
 - https://t.me/viperatmos
