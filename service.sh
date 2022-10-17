@@ -68,13 +68,13 @@ if [ -d $DIR ] && [ ! -f $AML/disable ]; then
 fi
 
 # mount
+NAME="*audio*effects*.conf -o -name *audio*effects*.xml -o -name *policy*.conf -o -name *policy*.xml"
 if [ -d $AML ] && [ ! -f $AML/disable ]\
-&& find $AML/system/ -type f; then
+&& find $AML/system/vendor -type f -name $NAME; then
   NAME="*audio*effects*.conf -o -name *audio*effects*.xml"
 #p  NAME="*audio*effects*.conf -o -name *audio*effects*.xml -o -name *policy*.conf -o -name *policy*.xml"
   DIR=$AML/system/vendor
 else
-  NAME="*audio*effects*.conf -o -name *audio*effects*.xml -o -name *policy*.conf -o -name *policy*.xml"
   DIR=$MODPATH/system/vendor
 fi
 FILE=`find $DIR/etc -maxdepth 1 -type f -name $NAME`
