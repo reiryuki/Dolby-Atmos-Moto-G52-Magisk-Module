@@ -13,6 +13,17 @@ resetprop ro.vendor.dolby.dax.version DAX3_3.6.0.12_r1
 resetprop vendor.audio.dolby.ds2.enabled true
 resetprop vendor.audio.dolby.ds2.hardbypass true
 
+# restart
+if [ "$API" -ge 24 ]; then
+  SVC=audioserver
+else
+  SVC=mediaserver
+fi
+PID=`pidof $SVC`
+if [ "$PID" ]; then
+  killall $SVC
+fi
+
 # function
 stop_service() {
 for NAMES in $NAME; do
@@ -113,14 +124,23 @@ if [ ! -d $MY_PRODUCT ] && [ -d /my_product/etc ]\
   done
 fi
 
-# restart
-PID=`pidof audioserver`
-if [ "$PID" ]; then
-  killall audioserver
-fi
-
 # wait
-sleep 40
+until [ "`getprop sys.boot_completed`" == "1" ]; do
+  sleep 10
+done
+
+# grant
+PKG=com.motorola.dolby.dolbyui
+if [ "$API" -ge 33 ]; then
+  pm grant $PKG android.permission.POST_NOTIFICATIONS
+fi
+if [ "$API" -ge 31 ]; then
+  pm grant $PKG android.permission.BLUETOOTH_CONNECT
+fi
+appops set $PKG SYSTEM_ALERT_WINDOW allow
+if [ "$API" -ge 30 ]; then
+  appops set $PKG AUTO_REVOKE_PERMISSIONS_IF_UNUSED ignore
+fi
 
 # grant
 PKG=com.dolby.daxservice
@@ -130,17 +150,37 @@ fi
 if [ "$API" -ge 30 ]; then
   appops set $PKG AUTO_REVOKE_PERMISSIONS_IF_UNUSED ignore
 fi
-killall $PKG
 
-# grant
-PKG=com.motorola.dolby.dolbyui
-if [ "$API" -ge 31 ]; then
-  pm grant $PKG android.permission.BLUETOOTH_CONNECT
+# function
+wait_audioserver() {
+PID=`pidof $SVC`
+sleep 240
+NEXTPID=`pidof $SVC`
+}
+
+# wait
+if [ "$API" -ge 24 ]; then
+  SVC=audioserver
+else
+  SVC=mediaserver
 fi
-appops set $PKG SYSTEM_ALERT_WINDOW allow
-if [ "$API" -ge 30 ]; then
-  appops set $PKG AUTO_REVOKE_PERMISSIONS_IF_UNUSED ignore
+wait_audioserver
+if [ "`getprop init.svc.$SVC`" == running ]; then
+  until [ "$PID" ] && [ "$NEXTPID" ]\
+  && [ "$PID" == "$NEXTPID" ]; do
+    wait_audioserver
+  done
+else
+  start $SVC
 fi
-killall $PKG
+
+# restart
+killall com.dolby.daxservice com.motorola.dolby.dolbyui
+
+
+
+
+
+
 
 
