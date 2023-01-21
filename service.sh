@@ -27,7 +27,8 @@ fi
 # function
 stop_service() {
 for NAMES in $NAME; do
-  if getprop | grep "init.svc.$NAMES\]: \[running"; then
+  if [ "`getprop init.svc.$NAMES`" == running ]\
+  || [ "`getprop init.svc.$NAMES`" == restarting ]; then
     stop $NAMES
   fi
 done
@@ -152,30 +153,42 @@ if [ "$API" -ge 30 ]; then
 fi
 
 # function
-wait_audioserver() {
+stop_log() {
+FILE=$MODPATH/debug.log
+SIZE=`du $FILE | sed "s|$FILE||"`
+if [ "$LOG" != stopped ] && [ "$SIZE" -gt 50 ]; then
+  exec 2>/dev/null
+  LOG=stopped
+fi
+}
+check_audioserver() {
+stop_log
 PID=`pidof $SVC`
-sleep 240
+sleep 10
 NEXTPID=`pidof $SVC`
+if [ "`getprop init.svc.$SVC`" != stopped ]; then
+  until [ "$PID" ] && [ "$NEXTPID" ]\
+  && [ "$PID" != "$NEXTPID" ]; do
+    check_audioserver
+  done
+  killall $PROC
+  check_audioserver
+else
+  start $SVC
+  check_audioserver
+fi
 }
 
-# wait
+# check
 if [ "$API" -ge 24 ]; then
   SVC=audioserver
 else
   SVC=mediaserver
 fi
-wait_audioserver
-if [ "`getprop init.svc.$SVC`" == running ]; then
-  until [ "$PID" ] && [ "$NEXTPID" ]\
-  && [ "$PID" == "$NEXTPID" ]; do
-    wait_audioserver
-  done
-else
-  start $SVC
-fi
+PROC="com.dolby.daxservice com.motorola.dolby.dolbyui"
+check_audioserver
 
-# restart
-killall com.dolby.daxservice com.motorola.dolby.dolbyui
+
 
 
 
