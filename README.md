@@ -19,8 +19,8 @@
 ## Requirements
 - Android 11 and up
 - Architecture 64 bit
-- Magisk installed
-- Recommended to use Magisk Delta for systemless early init mount manifest.xml if your ROM is Read-Only https://t.me/androidryukimodsdiscussions/100091
+- Magisk installed (Recommended to use Magisk Delta for systemless early init mount manifest.xml if your ROM is Read-Only https://t.me/androidryukimodsdiscussions/100091)
+- Moto Core Magisk Module installed https://github.com/reiryuki/Moto-Core-Magisk-Module
 
 ## WARNING!!!
 - Possibility of bootloop or even softbrick or a service failure on Read-Only ROM if you don't use Magisk Delta.
@@ -29,7 +29,8 @@
 - Recommended to use Magisk Delta https://t.me/androidryukimodsdiscussions/100091
 - Remove any other Dolby module with different name (no need to remove if it's the same name)
 - Reboot
-- Install this module https://www.pling.com/p/1908400/ via Magisk Manager or Recovery
+- Install Moto Core Magisk Module first: https://github.com/reiryuki/Moto-Core-Magisk-Module
+- Install this module https://www.pling.com/p/1908400/ via Magisk app or Recovery
 - Install AML Magisk Module https://t.me/androidryukimodsdiscussions/29836 only if using any other audio mod module
 - Reboot
 
