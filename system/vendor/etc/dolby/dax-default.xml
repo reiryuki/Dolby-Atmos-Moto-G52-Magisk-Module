@@ -1849,29 +1849,7 @@
     </geq-preset>
     <geq-preset name="vocal boost" id="2">
     </geq-preset>
-    <geq-preset name="manual" id="3" max_edit_gain="576" min_edit_gain="-576">
-      <gains>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-      </gains>
+    <geq-preset name="manual" id="3" max_edit_gain="576" min_edit_gain="-192">
     </geq-preset>
     <geq-preset name="flat" id="4">
     </geq-preset>
