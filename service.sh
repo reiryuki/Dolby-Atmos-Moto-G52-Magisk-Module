@@ -190,6 +190,7 @@ else
   SVC=mediaserver
 fi
 PROC="com.dolby.daxservice com.motorola.dolby.dolbyui"
+killall $PROC
 check_audioserver
 
 
