@@ -921,6 +921,9 @@ if [ "`grep_prop dolby.deepbass $OPTIONALS`" == 1 ]; then
   sed -i 's/frequency="19688"/frequency="13875"/g' $FILE
 fi
 PROP=`grep_prop dolby.gain $OPTIONALS`
+if [ "$PROP" ] && [ "$PROP" -gt 576 ]; then
+  PROP=576
+fi
 if [ "$PROP" ] && [ "$PROP" -gt 192 ]; then
   ui_print "- Changing max_edit_gain to $PROP"
   sed -i "s|max_edit_gain=\"192\"|max_edit_gain=\"$PROP\"|g" $FILE
