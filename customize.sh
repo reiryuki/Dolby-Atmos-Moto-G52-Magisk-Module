@@ -239,18 +239,41 @@ ui_print " "
 
 # check
 NAME=_ZN7android23sp_report_stack_pointerEv
-FILE=$VENDOR/lib64/hw/*audio*.so
-check_function
+if [ "$IS64BIT" == true ]; then
+  FILE=$VENDOR/lib64/hw/*audio*.so
+  check_function
+fi
 FILE=$VENDOR/lib/hw/*audio*.so
 check_function
 NAME=_ZN7android8hardware23getOrCreateCachedBinderEPNS_4hidl4base4V1_05IBaseE
-TARGET=vendor.dolby.hardware.dms@2.0.so
-LISTS=`strings $MODPATH/system/vendor/lib64/$TARGET | grep ^lib | grep .so`
-FILE=`for LIST in $LISTS; do echo $SYSTEM/lib64/$LIST; done`
-check_function
-LISTS=`strings $MODPATH/system/vendor/lib/$TARGET | grep ^lib | grep .so`
+DES=vendor.dolby.hardware.dms@2.0.so
+LIB=libhidlbase.so
+if [ "$IS64BIT" == true ]; then
+  LISTS=`strings $MODPATH/system/vendor/lib64/$DES | grep ^lib | grep .so`
+  FILE=`for LIST in $LISTS; do echo $SYSTEM/lib64/$LIST; done`
+  ui_print "- Checking"
+  ui_print "$NAME"
+  ui_print "  function at"
+  ui_print "$FILE"
+  ui_print "  Please wait..."
+  if ! grep -q $NAME $FILE; then
+    ui_print "  Using new $LIB 64"
+    mv -f $MODPATH/system_support/lib64/$LIB $MODPATH/system/lib64
+  fi
+  ui_print " "
+fi
+LISTS=`strings $MODPATH/system/vendor/lib/$DES | grep ^lib | grep .so`
 FILE=`for LIST in $LISTS; do echo $SYSTEM/lib/$LIST; done`
-check_function
+ui_print "- Checking"
+ui_print "$NAME"
+ui_print "  function at"
+ui_print "$FILE"
+ui_print "  Please wait..."
+if ! grep -q $NAME $FILE; then
+  ui_print "  Using new $LIB"
+  mv -f $MODPATH/system_support/lib/$LIB $MODPATH/system/lib
+fi
+ui_print " "
 
 # sepolicy
 FILE=$MODPATH/sepolicy.rule
@@ -688,7 +711,7 @@ early_init_mount_dir
 #chcon -R u:object_r:system_lib_file:s0 $MODPATH/system_support/lib*
 #NAMES="libhidltransport.so libhwbinder.so"
 #find_file
-#rm -rf $MODPATH/system_support
+rm -rf $MODPATH/system_support
 
 # patch manifest.xml
 FILE="$MAGISKTMP/mirror/*/etc/vintf/manifest.xml
