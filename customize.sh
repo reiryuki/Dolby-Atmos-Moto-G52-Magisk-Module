@@ -111,9 +111,10 @@ FILE=/bin/hw/vendor.dolby.media.c2@1.0-service
 if [ -f /system$FILE ] || [ -f /vendor$FILE ]\
 || [ -f /odm$FILE ] || [ -f /system_ext$FILE ]\
 || [ -f /product$FILE ]; then
-  ui_print "! This module is conflicting with your"
+  ui_print "! This module maybe conflicting with your"
   ui_print "  $FILE"
-  abort
+  ui_print "  causes your internal storage mount failed"
+  ui_print " "
 fi
 
 # check
@@ -275,6 +276,11 @@ FILE=/data/adb/modules/$NAMES/module.prop
 if grep -q 'and Dolby Atmos' $FILE; then
   conflict
 fi
+NAMES=DolbyAtmosSpatialSound
+FILE=/data/adb/modules/$NAMES/module.prop
+if grep -q 'Dolby Atmos and' $FILE; then
+  conflict
+fi
 
 # function
 cleanup() {
@@ -333,15 +339,21 @@ fi
 backup() {
 if [ ! -f $FILE.orig ] && [ ! -f $FILE.bak ]; then
   cp -af $FILE $FILE.orig
+  if [ -f $FILE.orig ]; then
+    ui_print "- Created"
+    ui_print "$FILE.orig"
+  else
+    ui_print "- Failed to create"
+    ui_print "$FILE.orig"
+    ui_print "  Probably Read-Only or no space left"
+  fi
+  ui_print " "
 fi
 }
 patch_manifest() {
 if [ -f $FILE ]; then
   backup
   if [ -f $FILE.orig ] || [ -f $FILE.bak ]; then
-    ui_print "- Created"
-    ui_print "$FILE.orig"
-    ui_print " "
     ui_print "- Patching"
     ui_print "$FILE"
     ui_print "  directly..."
@@ -349,17 +361,8 @@ if [ -f $FILE ]; then
     <hal format="hidl">\
         <name>vendor.dolby.hardware.dms</name>\
         <transport>hwbinder</transport>\
-        <version>2.0</version>\
-        <interface>\
-            <name>IDms</name>\
-            <instance>default</instance>\
-        </interface>\
         <fqname>@2.0::IDms/default</fqname>\
     </hal>' $FILE
-    ui_print " "
-  else
-    ui_print "- Failed to create"
-    ui_print "$FILE.orig"
     ui_print " "
   fi
 fi
@@ -368,18 +371,11 @@ patch_hwservice() {
 if [ -f $FILE ]; then
   backup
   if [ -f $FILE.orig ] || [ -f $FILE.bak ]; then
-    ui_print "- Created"
-    ui_print "$FILE.orig"
-    ui_print " "
     ui_print "- Patching"
     ui_print "$FILE"
     ui_print "  directly..."
     sed -i '1i\
 vendor.dolby.hardware.dms::IDms u:object_r:hal_dms_hwservice:s0' $FILE
-    ui_print " "
-  else
-    ui_print "- Failed to create"
-    ui_print "$FILE.orig"
     ui_print " "
   fi
 fi
@@ -514,11 +510,6 @@ if [ $EIM == true ]; then
     <hal format="hidl">\
         <name>vendor.dolby.hardware.dms</name>\
         <transport>hwbinder</transport>\
-        <version>2.0</version>\
-        <interface>\
-            <name>IDms</name>\
-            <instance>default</instance>\
-        </interface>\
         <fqname>@2.0::IDms/default</fqname>\
     </hal>' $DES
       ui_print " "
@@ -860,37 +851,13 @@ if [ "$PROP" ] && [ "$PROP" -gt 192 ]; then
 fi
 ui_print " "
 
-# function
-change_name() {
-if grep -q $NAME $FILE; then
-  ui_print "- Changing"
-  ui_print "$NAME"
-  ui_print "  to"
-  ui_print "$NAME2"
-  ui_print "  at"
-  ui_print "$FILE"
-  ui_print "  Please wait..."
-  sed -i "s|$NAME|$NAME2|g" $FILE
-fi
-ui_print " "
-}
-
-# uuid
-NAME=9d4921da-8225-4f29-aefa-39537a04bcaa
-NAME2=72696572-7579-696b-6874-656669786572
-FILE=$MODPATH/.aml.sh
-#change_name
-NAME=$'\xda\x21\x49\x9d\x25\x82\x29\x4f\xfa\xae\x39\x53\x7a\x04\xbc\xaa'
-NAME2=$'\x72\x65\x69\x72\x79\x75\x6b\x69\x74\x68\x65\x66\x69\x78\x65\x72'
-FILE="$MODPATH/system/vendor/lib*/soundfx/libswdap.so"
-#change_name
-
 # audio rotation
 FILE=$MODPATH/service.sh
 if [ "`grep_prop audio.rotation $OPTIONALS`" == 1 ]; then
   ui_print "- Enables ro.audio.monitorRotation=true"
   sed -i '1i\
-resetprop ro.audio.monitorRotation true' $FILE
+resetprop ro.audio.monitorRotation true\
+resetprop ro.audio.monitorWindowRotation true' $FILE
   ui_print " "
 fi
 
@@ -922,14 +889,14 @@ if "$IS64BIT"; then
          /lib64/libstagefrightdolby.so
          /lib64/libstagefright_soft_ddpdec.so
          /lib64/libstagefright_soft_ac4dec.so"
-  file_check_vendor
+#  file_check_vendor
 fi
 if [ "$LIST32BIT" ]; then
   FILES="/lib/libdeccfg.so
          /lib/libstagefrightdolby.so
          /lib/libstagefright_soft_ddpdec.so
          /lib/libstagefright_soft_ac4dec.so"
-  file_check_vendor
+#  file_check_vendor
 fi
 
 # vendor_overlay
