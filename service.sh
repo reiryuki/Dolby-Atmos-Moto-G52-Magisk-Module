@@ -13,6 +13,7 @@ resetprop ro.audio.ignore_effects false
 resetprop -p --delete persist.vendor.audio_fx.current
 resetprop -n persist.vendor.audio_fx.current dolby
 resetprop ro.vendor.dolby.dax.version DAX3_3.6.0.12_r1
+resetprop ro.dolby.mod_uuid false
 resetprop vendor.audio.dolby.ds2.enabled true
 resetprop vendor.audio.dolby.ds2.hardbypass true
 

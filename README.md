@@ -8,6 +8,7 @@
 - Equalizer soundfx ported from Motorola Moto G52 (rhode) and integrated as a Magisk Module for all supported and rooted devices with Magisk
 - Global type soundfx
 - Doesn't support auxiliary cable
+- Conflicted with vendor.dolby_v3_6.hardware.dms360@2.0-service
 
 ## Sources
 - https://dumps.tadiphone.dev/dumps/motorola/rhode user-12-S1SR32.38-124-3-a8403-release-keys

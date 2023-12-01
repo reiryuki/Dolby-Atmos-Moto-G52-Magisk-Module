@@ -61,7 +61,7 @@ if [ "$IS64BIT" == true ]; then
   fi
   ui_print " "
 else
-  abort "- This module is only for 64 bit architectures."
+  abort "- This module is only for 64 bit architecture."
 fi
 
 # sdk
@@ -233,7 +233,12 @@ if [ "$BOOTMODE" == true ]; then
     RES=`pm uninstall $PKG 2>/dev/null`
   done
 fi
-rm -f /data/vendor/dolby/dax_sqlite3.db
+if [ "`grep_prop dolby.mod $OPTIONALS`" == 0 ]; then
+  rm -f /data/vendor/dolby/dax_sqlite3.db
+else
+  rm -f /data/vendor/dolby/dap_sqlite3.db
+  sed -i 's|dax_sqlite3.db|dap_sqlite3.db|g' $MODPATH/uninstall.sh
+fi
 rm -rf $MODPATH/unused
 remove_sepolicy_rule
 ui_print " "
@@ -264,7 +269,13 @@ done
 }
 
 # conflict
-NAMES="dolbyatmos MotoDolby DolbyAudio dsplus Dolby"
+if [ "`grep_prop dolby.mod $OPTIONALS`" == 0 ]; then
+  NAMES="dolbyatmos MotoDolby DolbyAudio
+         DolbyAtmos360 dsplus Dolby"
+else
+  NAMES="dolbyatmos MotoDolby DolbyAudio
+         DolbyAtmos360"
+fi
 conflict
 NAMES=SoundEnhancement
 FILE=/data/adb/modules/$NAMES/module.prop
@@ -394,47 +405,58 @@ if echo $MAGISK_VER | grep -Eq 'delta|Delta|kitsune'\
     MOUNT=`mount | grep $MAGISKTMP/preinit`
     BLOCK=`echo $MOUNT | sed 's| on.*||g'`
     DIR=`mount | sed "s|$MOUNT||g" | grep -m 1 $BLOCK`
-    EIMDIR=`echo $DIR | sed "s|$BLOCK on ||g" | sed 's| type.*||g'`/early-mount.d
-  elif ! $ISENCRYPTED; then
-    EIMDIR=/data/adb/early-mount.d
-  elif [ -d /data/unencrypted ]\
-  && ! grep ' /data ' /proc/mounts | grep -q dm-\
-  && grep ' /data ' /proc/mounts | grep -q ext4; then
-    EIMDIR=/data/unencrypted/early-mount.d
-  elif grep ' /cache ' /proc/mounts | grep -q ext4; then
-    EIMDIR=/cache/early-mount.d
-  elif grep ' /metadata ' /proc/mounts | grep -q ext4; then
-    EIMDIR=/metadata/early-mount.d
-  elif grep ' /persist ' /proc/mounts | grep -q ext4; then
-    EIMDIR=/persist/early-mount.d
-  elif grep ' /mnt/vendor/persist ' /proc/mounts | grep -q ext4; then
-    EIMDIR=/mnt/vendor/persist/early-mount.d
-  elif grep ' /cust ' /proc/mounts | grep -q ext4; then
-    EIMDIR=/cust/early-mount.d
-  elif [ "$MAGISK_VER_CODE" -ge 26000 ]\
-  && [ -d /data/unencrypted ]\
-  && ! grep ' /data ' /proc/mounts | grep -q dm-\
-  && grep ' /data ' /proc/mounts | grep -q f2fs; then
-    EIMDIR=/data/unencrypted/early-mount.d
-  elif [ "$MAGISK_VER_CODE" -ge 26000 ]\
-  && grep ' /cache ' /proc/mounts | grep -q f2fs; then
-    EIMDIR=/cache/early-mount.d
-  elif [ "$MAGISK_VER_CODE" -ge 26000 ]\
-  && grep ' /metadata ' /proc/mounts | grep -q f2fs; then
-    EIMDIR=/metadata/early-mount.d
-  elif [ "$MAGISK_VER_CODE" -ge 26000 ]\
-  && grep ' /persist ' /proc/mounts | grep -q f2fs; then
-    EIMDIR=/persist/early-mount.d
-  elif [ "$MAGISK_VER_CODE" -ge 26000 ]\
-  && grep ' /mnt/vendor/persist ' /proc/mounts | grep -q f2fs; then
-    EIMDIR=/mnt/vendor/persist/early-mount.d
-  elif [ "$MAGISK_VER_CODE" -ge 26000 ]\
-  && grep ' /cust ' /proc/mounts | grep -q f2fs; then
-    EIMDIR=/cust/early-mount.d
-  else
-    EIM=false
-    ui_print "- Unable to find early init mount directory"
-    ui_print " "
+    DIR=`echo $DIR | sed "s|$BLOCK on ||g" | sed 's| type.*||g'`
+    if [ "$DIR" ]; then
+      EIMDIR=$DIR/early-mount.d
+    else
+      ui_print "! It seems Magisk early init mount directory is not"
+      ui_print "  activated yet. Please reinstall Magisk.zip via Magisk app"
+      ui_print "  (not via Recovery)."
+      ui_print " "
+    fi
+  fi
+  if [ ! "$EIMDIR" ]; then
+    if ! $ISENCRYPTED; then
+      EIMDIR=/data/adb/early-mount.d
+    elif [ -d /data/unencrypted ]\
+    && ! grep ' /data ' /proc/mounts | grep -q dm-\
+    && grep ' /data ' /proc/mounts | grep -q ext4; then
+      EIMDIR=/data/unencrypted/early-mount.d
+    elif grep ' /cache ' /proc/mounts | grep -q ext4; then
+      EIMDIR=/cache/early-mount.d
+    elif grep ' /metadata ' /proc/mounts | grep -q ext4; then
+      EIMDIR=/metadata/early-mount.d
+    elif grep ' /persist ' /proc/mounts | grep -q ext4; then
+      EIMDIR=/persist/early-mount.d
+    elif grep ' /mnt/vendor/persist ' /proc/mounts | grep -q ext4; then
+      EIMDIR=/mnt/vendor/persist/early-mount.d
+    elif grep ' /cust ' /proc/mounts | grep -q ext4; then
+      EIMDIR=/cust/early-mount.d
+    elif [ "$MAGISK_VER_CODE" -ge 26000 ]\
+    && [ -d /data/unencrypted ]\
+    && ! grep ' /data ' /proc/mounts | grep -q dm-\
+    && grep ' /data ' /proc/mounts | grep -q f2fs; then
+      EIMDIR=/data/unencrypted/early-mount.d
+    elif [ "$MAGISK_VER_CODE" -ge 26000 ]\
+    && grep ' /cache ' /proc/mounts | grep -q f2fs; then
+      EIMDIR=/cache/early-mount.d
+    elif [ "$MAGISK_VER_CODE" -ge 26000 ]\
+    && grep ' /metadata ' /proc/mounts | grep -q f2fs; then
+      EIMDIR=/metadata/early-mount.d
+    elif [ "$MAGISK_VER_CODE" -ge 26000 ]\
+    && grep ' /persist ' /proc/mounts | grep -q f2fs; then
+      EIMDIR=/persist/early-mount.d
+    elif [ "$MAGISK_VER_CODE" -ge 26000 ]\
+    && grep ' /mnt/vendor/persist ' /proc/mounts | grep -q f2fs; then
+      EIMDIR=/mnt/vendor/persist/early-mount.d
+    elif [ "$MAGISK_VER_CODE" -ge 26000 ]\
+    && grep ' /cust ' /proc/mounts | grep -q f2fs; then
+      EIMDIR=/cust/early-mount.d
+    else
+      EIM=false
+      ui_print "- Unable to find early init mount directory"
+      ui_print " "
+    fi
   fi
   if [ -d ${EIMDIR%/early-mount.d} ]; then
     mkdir -p $EIMDIR
@@ -563,8 +585,8 @@ remount_rw
 early_init_mount_dir
 
 # check
-#chcon -R u:object_r:system_lib_file:s0 $MODPATH/system_support/lib*
-#NAMES="libhidltransport.so libhwbinder.so"
+chcon -R u:object_r:system_lib_file:s0 $MODPATH/system_support/lib*
+NAMES="libhidltransport.so libhwbinder.so"
 #find_file
 rm -rf $MODPATH/system_support
 
@@ -783,12 +805,13 @@ fi
 # settings
 FILE=$MODPATH/system/vendor/etc/dolby/dax-default.xml
 PROP=`grep_prop dolby.bass $OPTIONALS`
-if [ "$PROP" == def ]; then
-  ui_print "- Using default settings of bass-enhancer"
-elif [ "$PROP" == true ]; then
+if [ "$PROP" == true ]; then
   ui_print "- Changing all bass-enhancer-enable value to true"
   sed -i 's|bass-enhancer-enable value="false"|bass-enhancer-enable value="true"|g' $FILE
-elif [ "$PROP" ] && [ "$PROP" != false ] && [ "$PROP" -gt 0 ]; then
+elif [ "$PROP" == false ]; then
+  ui_print "- Changing all bass-enhancer-enable value to false"
+  sed -i 's|bass-enhancer-enable value="true"|bass-enhancer-enable value="false"|g' $FILE
+elif [ "$PROP" ] && [ "$PROP" != def ] && [ "$PROP" -gt 0 ]; then
   ui_print "- Changing all bass-enhancer-enable value to true"
   sed -i 's|bass-enhancer-enable value="false"|bass-enhancer-enable value="true"|g' $FILE
   ROWS=`grep bass-enhancer-boost $FILE | sed -e 's|<bass-enhancer-boost value="||g' -e 's|"/>||g'`
@@ -798,9 +821,6 @@ elif [ "$PROP" ] && [ "$PROP" != false ] && [ "$PROP" -gt 0 ]; then
   for ROW in $ROWS; do
     sed -i "s|bass-enhancer-boost value=\"$ROW\"|bass-enhancer-boost value=\"$PROP\"|g" $FILE
   done
-else
-  ui_print "- Changing all bass-enhancer-enable value to false"
-  sed -i 's|bass-enhancer-enable value="true"|bass-enhancer-enable value="false"|g' $FILE
 fi
 if [ "`grep_prop dolby.virtualizer $OPTIONALS`" == 1 ]; then
   ui_print "- Changing all virtualizer-enable value to true"
@@ -853,12 +873,14 @@ ui_print " "
 
 # function
 rename_file() {
-ui_print "- Renaming"
-ui_print "$FILE"
-ui_print "  to"
-ui_print "$MODFILE"
-mv -f $FILE $MODFILE
-ui_print " "
+if [ -f $FILE ]; then
+  ui_print "- Renaming"
+  ui_print "$FILE"
+  ui_print "  to"
+  ui_print "$MODFILE"
+  mv -f $FILE $MODFILE
+  ui_print " "
+fi
 }
 change_name() {
 if grep -q $NAME $FILE; then
@@ -872,6 +894,16 @@ fi
 
 # mod
 if [ "`grep_prop dolby.mod $OPTIONALS`" != 0 ]; then
+  NAME=dax-default.xml
+  NAME2=dap-default.xml
+  FILE=$MODPATH/system/vendor/etc/dolby/$NAME
+  MODFILE=$MODPATH/system/vendor/etc/dolby/$NAME2
+  rename_file
+  FILE=$MODPATH/system/vendor/lib*/libdlbdsservice.so
+  change_name
+  NAME=dax_sqlite3.db
+  NAME2=dap_sqlite3.db
+  change_name
   NAME=libswdap.so
   NAME2=libswdlb.so
   if [ "$IS64BIT" == true ]; then
@@ -898,6 +930,28 @@ $MODPATH/.aml.sh"
 $MODPATH/system/vendor/lib*/vendor.dolby*.hardware.dms*@*-impl.so
 $MODPATH/system/vendor/bin/hw/vendor.dolby*.hardware.dms*@*-service"
   change_name
+  sed -i 's|ro.dolby.mod_uuid false|ro.dolby.mod_uuid true|g' $MODPATH/service.sh
+  NAME=$'\x39\x53\x7a\x04\xbc\xaa'
+  NAME2=$'\x5f\x72\x79\x75\x6b\x69'
+  FILE=$MODPATH/system/vendor/lib*/soundfx/libswdlb.so
+  change_name
+  NAME=$'\x45\x27\x99\x21\x85\x39'
+  FILE=$MODPATH/system/vendor/lib*/soundfx/libswdlb.so
+#  change_name
+  NAME=$'\xd5\x3e\x26\xda\x02\x53'
+  FILE=$MODPATH/system/vendor/lib*/soundfx/libhwdlb.so
+#  change_name
+  NAME=$'\xef\x93\x7f\x67\x55\x87'
+  FILE=$MODPATH/system/vendor/lib*/soundfx/lib*wdlb.so
+  change_name
+  NAME=39537a04bcaa
+  NAME2=5f7279756b69
+  FILE=$MODPATH/.aml.sh
+  change_name
+  NAME=452799218539
+#  change_name
+  NAME=d53e26da0253
+#  change_name
 fi
 
 # audio rotation
