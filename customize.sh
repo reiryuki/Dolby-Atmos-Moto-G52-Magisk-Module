@@ -932,7 +932,7 @@ $MODPATH/system/vendor/bin/hw/vendor.dolby*.hardware.dms*@*-service"
   change_name
   sed -i 's|ro.dolby.mod_uuid false|ro.dolby.mod_uuid true|g' $MODPATH/service.sh
   NAME=$'\x39\x53\x7a\x04\xbc\xaa'
-  NAME2=$'\x5f\x72\x79\x75\x6b\x69'
+  NAME2=_ryuki
   FILE=$MODPATH/system/vendor/lib*/soundfx/libswdlb.so
   change_name
   NAME=$'\x45\x27\x99\x21\x85\x39'
