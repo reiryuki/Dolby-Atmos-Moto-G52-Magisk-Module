@@ -1,7 +1,7 @@
 id=DolbyAtmos
 name=Dolby Atmos Moto G52
-version=v2.7
-versionCode=27
+version=v2.8
+versionCode=28
 author=Rei Ryuki the Fixer
 description=An equalizer global type soundfx ported from Motorola G52 (rhode) for any Android 11 and up, 64 bit architecture.
 
