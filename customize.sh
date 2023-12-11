@@ -57,7 +57,8 @@ if [ "$IS64BIT" == true ]; then
     ui_print "- 32 bit library support"
   else
     ui_print "- Doesn't support 32 bit library"
-    rm -rf $MODPATH/system*/lib $MODPATH/system*/vendor/lib
+    rm -rf $MODPATH/armeabi-v7a $MODPATH/x86\
+     $MODPATH/system*/lib $MODPATH/system*/vendor/lib
   fi
   ui_print " "
 else
@@ -233,11 +234,11 @@ if [ "$BOOTMODE" == true ]; then
     RES=`pm uninstall $PKG 2>/dev/null`
   done
 fi
-if [ "`grep_prop dolby.mod $OPTIONALS`" == 0 ]; then
-  rm -f /data/vendor/dolby/dax_sqlite3.db
-else
+if [ "`grep_prop dolby.mod $OPTIONALS`" == 1 ]; then
   rm -f /data/vendor/dolby/dap_sqlite3.db
   sed -i 's|dax_sqlite3.db|dap_sqlite3.db|g' $MODPATH/uninstall.sh
+else
+  rm -f /data/vendor/dolby/dax_sqlite3.db
 fi
 rm -rf $MODPATH/unused
 remove_sepolicy_rule
@@ -269,12 +270,12 @@ done
 }
 
 # conflict
-if [ "`grep_prop dolby.mod $OPTIONALS`" == 0 ]; then
-  NAMES="dolbyatmos MotoDolby DolbyAudio
-         DolbyAtmos360 dsplus Dolby"
-else
+if [ "`grep_prop dolby.mod $OPTIONALS`" == 1 ]; then
   NAMES="dolbyatmos MotoDolby DolbyAudio
          DolbyAtmos360"
+else
+  NAMES="dolbyatmos MotoDolby DolbyAudio
+         DolbyAtmos360 dsplus Dolby"
 fi
 conflict
 NAMES=MiSound
@@ -901,7 +902,7 @@ fi
 }
 
 # mod
-if [ "`grep_prop dolby.mod $OPTIONALS`" != 0 ]; then
+if [ "`grep_prop dolby.mod $OPTIONALS`" == 1 ]; then
   NAME=dax-default.xml
   NAME2=dap-default.xml
   FILE=$MODPATH/system/vendor/etc/dolby/$NAME
@@ -1000,14 +1001,14 @@ if [ "$IS64BIT" == true ]; then
          /lib64/libstagefrightdolby.so
          /lib64/libstagefright_soft_ddpdec.so
          /lib64/libstagefright_soft_ac4dec.so"
-#  file_check_vendor
+  file_check_vendor
 fi
 if [ "$LIST32BIT" ]; then
   FILES="/lib/libdeccfg.so
          /lib/libstagefrightdolby.so
          /lib/libstagefright_soft_ddpdec.so
          /lib/libstagefright_soft_ac4dec.so"
-#  file_check_vendor
+  file_check_vendor
 fi
 
 # vendor_overlay
