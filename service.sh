@@ -23,10 +23,8 @@ if [ "$API" -ge 24 ]; then
 else
   SERVER=mediaserver
 fi
-PID=`pidof $SERVER`
-if [ "$PID" ]; then
-  killall $SERVER android.hardware.audio@4.0-service-mediatek
-fi
+killall $SERVER\
+ android.hardware.audio@4.0-service-mediatek
 
 # stop
 NAMES="dms-hal-1-0 dms-hal-2-0 dms-v36-hal-2-0"
@@ -177,7 +175,7 @@ DMAF=`dumpsys media.audio_flinger`
 # function
 stop_log() {
 SIZE=`du $LOGFILE | sed "s|$LOGFILE||g"`
-if [ "$LOG" != stopped ] && [ "$SIZE" -gt 50 ]; then
+if [ "$LOG" != stopped ] && [ "$SIZE" -gt 75 ]; then
   exec 2>/dev/null
   set +x
   LOG=stopped
