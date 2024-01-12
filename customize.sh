@@ -401,7 +401,15 @@ if echo $MAGISK_VER | grep -Eq 'delta|Delta|kitsune'\
       DIR=`mount | sed "s|$MOUNT||g" | grep -m 1 $BLOCK`
       DIR=`echo $DIR | sed "s|$BLOCK on ||g" | sed 's| type.*||g'`
       if [ "$DIR" ]; then
-        EIMDIR=$DIR/early-mount.d
+        if [ "$DIR" == /data ]; then
+          if ! $ISENCRYPTED; then
+            EIMDIR=/data/adb/early-mount.d
+          else
+            EIMDIR=/data/unencrypted/early-mount.d
+          fi
+        else
+          EIMDIR=$DIR/early-mount.d
+        fi
       else
         ui_print "! It seems Magisk early init mount directory is not"
         ui_print "  activated yet. Please reinstall Magisk.zip via Magisk app"
