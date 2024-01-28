@@ -102,25 +102,9 @@ if [ -f /system$FILE ] || [ -f /vendor$FILE ]\
   ui_print " "
 fi
 
-# check
-NAME=_ZN7android23sp_report_stack_pointerEv
-if [ "$IS64BIT" == true ]; then
-  FILE=$VENDOR/lib64/hw/*audio*.so
-  ui_print "- Checking"
-  ui_print "$NAME"
-  ui_print "  function at"
-  ui_print "$FILE"
-  ui_print "  Please wait..."
-  if ! grep -q $NAME $FILE; then
-    ui_print "  ! Function not found."
-    ui_print "    Unsupported ROM."
-    unmount_mirror
-    abort
-  fi
-  ui_print " "
-fi
-if [ "$LIST32BIT" ]; then
-  FILE=$VENDOR/lib/hw/*audio*.so
+# function
+check_function_2() {
+if [ -f $MODPATH/system_support$DIR/$LIB ]; then
   ui_print "- Checking"
   ui_print "$NAME"
   ui_print "  function at"
@@ -128,44 +112,63 @@ if [ "$LIST32BIT" ]; then
   ui_print "  Please wait..."
   if ! grep -q $NAME $FILE; then
     ui_print "  Function not found."
-    unset LIST32BIT
-    rm -rf $MODPATH/system*/lib $MODPATH/system*/vendor/lib
+    ui_print "  Replaces /system$DIR/$LIB."
+    mv -f $MODPATH/system_support$DIR/$LIB $MODPATH/system$DIR
+    [ "$MES" ] && ui_print "$MES"
   fi
   ui_print " "
 fi
-
-# function
-run_check_function() {
-LISTS=`strings $MODPATH/system/vendor$DIR/$DES | grep ^lib | grep .so`
-FILE=`for LIST in $LISTS; do echo $SYSTEM$DIR/$LIST; done`
-ui_print "- Checking"
-ui_print "$NAME"
-ui_print "  function at"
-ui_print "$FILE"
-ui_print "  Please wait..."
-if ! grep -q $NAME $FILE; then
-  ui_print "  Function not found."
-  ui_print "  Replaces /system$DIR/$LIB"
-  mv -f $MODPATH/system_support$DIR/$LIB $MODPATH/system$DIR
-fi
-ui_print " "
 }
 check_function() {
-if [ "$IS64BIT" == true ]; then
-  DIR=/lib64
-  run_check_function
-fi
-if [ "$LIST32BIT" ]; then
-  DIR=/lib
-  run_check_function
+if [ -d $MODPATH/system_support/vendor$DIR/hw ]; then
+  ui_print "- Checking"
+  ui_print "$NAME"
+  ui_print "  function at"
+  ui_print "$FILE"
+  ui_print "  Please wait..."
+  if grep -q $NAME $FILE; then
+    ui_print " "
+  else
+    ui_print "  Function not found."
+    ui_print "  Replaces /vendor$DIR/hw/*audio*.so."
+    mv -f $MODPATH/system_support/vendor$DIR/hw $MODPATH/system/vendor$DIR
+    [ "$MES" ] && ui_print "$MES"
+    ui_print " "
+    FILE=$SYSTEM$DIR/$LIB
+    check_function_2
+  fi
 fi
 }
 
 # check
+NAME=_ZN7android23sp_report_stack_pointerEv
+LIB=libhidlbase.so
+MES="  Dolby Atmos may not work."
+if [ "$IS64BIT" == true ]; then
+  DIR=/lib64
+  FILE=$VENDOR$DIR/hw/*audio*.so
+  check_function
+fi
+if [ "$LIST32BIT" ]; then
+  DIR=/lib
+  FILE=$VENDOR$DIR/hw/*audio*.so
+  check_function
+fi
 NAME=_ZN7android8hardware23getOrCreateCachedBinderEPNS_4hidl4base4V1_05IBaseE
 DES=vendor.dolby.hardware.dms@2.0.so
-LIB=libhidlbase.so
-check_function
+if [ "$IS64BIT" == true ]; then
+  DIR=/lib64
+  LISTS=`strings $MODPATH/system/vendor$DIR/$DES | grep ^lib | grep .so`
+  FILE=`for LIST in $LISTS; do echo $SYSTEM$DIR/$LIST; done`
+  check_function_2
+fi
+if [ "$LIST32BIT" ]; then
+  DIR=/lib
+  LISTS=`strings $MODPATH/system/vendor$DIR/$DES | grep ^lib | grep .so`
+  FILE=`for LIST in $LISTS; do echo $SYSTEM$DIR/$LIST; done`
+  check_function_2
+fi
+rm -rf $MODPATH/system_support
 
 # sepolicy
 FILE=$MODPATH/sepolicy.rule
@@ -253,10 +256,10 @@ done
 
 # conflict
 if [ "`grep_prop dolby.mod $OPTIONALS`" == 1 ]; then
-  NAMES="dolbyatmos MotoDolby DolbyAudio
+  NAMES="dolbyatmos MotoDolby DolbyAudio DolbyAtmosSP
          DolbyAtmos360 DolbyAtmosSpatialSound"
 else
-  NAMES="dolbyatmos MotoDolby DolbyAudio
+  NAMES="dolbyatmos MotoDolby DolbyAudio DolbyAtmosSP
          DolbyAtmos360 DolbyAtmosSpatialSound
          dsplus Dolby"
 fi
@@ -472,24 +475,14 @@ else
   EIM=false
 fi
 }
-run_find_file() {
-for NAME in $NAMES; do
-  FILE=`find $SYSTEM$DIR $SYSTEM_EXT$DIR -type f -name $NAME`
-  if [ ! "$FILE" ]; then
-    ui_print "- Using /system$DIR/$NAME"
-    cp -f $MODPATH/system_support$DIR/$NAME $MODPATH/system$DIR
-    ui_print " "
-  fi
-done
-}
-find_file() {
-if [ "$IS64BIT" == true ]; then
-  DIR=/lib64
-  run_find_file
-fi
-if [ "$LIST32BIT" ]; then
-  DIR=/lib
-  run_find_file
+eim_cache_warning() {
+if echo $EIMDIR | grep -q cache; then
+  ui_print "  Please do not ever wipe your /cache"
+  ui_print "  as long as this module is installed!"
+  ui_print "  If your /cache is wiped for some reasons,"
+  ui_print "  then you need to uninstall this module and reboot first,"
+  ui_print "  then reinstall this module afterwards"
+  ui_print "  to get this module working correctly."
 fi
 }
 patch_manifest_eim() {
@@ -504,14 +497,14 @@ if [ $EIM == true ]; then
     fi
     if ! grep -A2 vendor.dolby.hardware.dms $DES | grep -q 2.0; then
       ui_print "- Patching"
-      ui_print "$SRC"
-      ui_print "  systemlessly using early init mount..."
+      ui_print "$DES"
       sed -i '/<manifest/a\
     <hal format="hidl">\
         <name>vendor.dolby.hardware.dms</name>\
         <transport>hwbinder</transport>\
         <fqname>@2.0::IDms/default</fqname>\
     </hal>' $DES
+      eim_cache_warning
       ui_print " "
     fi
   else
@@ -531,10 +524,10 @@ if [ $EIM == true ]; then
     fi
     if ! grep -Eq 'u:object_r:hal_dms_hwservice:s0|u:object_r:default_android_hwservice:s0' $DES; then
       ui_print "- Patching"
-      ui_print "$SRC"
-      ui_print "  systemlessly using early init mount..."
+      ui_print "$DES"
       sed -i '1i\
 vendor.dolby.hardware.dms::IDms u:object_r:hal_dms_hwservice:s0' $DES
+      eim_cache_warning
       ui_print " "
     fi
   else
@@ -561,11 +554,6 @@ remount_rw
 
 # early init mount dir
 early_init_mount_dir
-
-# check
-NAMES="libhidltransport.so libhwbinder.so"
-#find_file
-rm -rf $MODPATH/system_support
 
 # patch manifest.xml
 FILE="$INTERNALDIR/mirror/*/etc/vintf/manifest.xml
