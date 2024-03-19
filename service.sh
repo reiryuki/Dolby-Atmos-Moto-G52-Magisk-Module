@@ -14,6 +14,7 @@ resetprop -p --delete persist.vendor.audio_fx.current
 resetprop -n persist.vendor.audio_fx.current dolby
 resetprop -n ro.vendor.dolby.dax.version DAX3_3.6.0.12_r1
 resetprop -n ro.dolby.mod_uuid false
+resetprop -n ro.dolby.music_stream false
 resetprop -n vendor.audio.dolby.ds2.enabled true
 resetprop -n vendor.audio.dolby.ds2.hardbypass true
 

@@ -57,13 +57,12 @@
 ## Tested on
 - Android 12.1 Nusantara ROM
 - Android 13 Nusantara ROM, CrDroid ROM, & AlphaDroid ROM
-
-## Known Issue
-- Unsupported in some Android 14 ROMs
+- Android 14 LineageOS ROM
 
 ## Credits and Contributors
 - https://t.me/viperatmos
 - https://t.me/androidryukimodsdiscussions
+- @HELLBOY017
 - You can contribute ideas about this Magisk Module here: https://t.me/androidappsportdevelopment
 
 ## Sponsors
