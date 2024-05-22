@@ -151,7 +151,8 @@ fi
 mount_bind_file() {
 for FILE in $FILES; do
   if echo $FILE | grep libhidlbase.so; then
-    if grep _ZN7android8String16aSEOS0_ $FILE; then
+    DES=`echo $FILE | sed 's|libhidlbase.so|libutils.so|g'`
+    if grep _ZN7android8String16aSEOS0_ $DES; then
       umount $FILE
       mount -o bind $MODFILE $FILE
     fi
