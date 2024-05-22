@@ -694,6 +694,12 @@ if echo "$PROP" | grep -q g; then
   sed -i 's|#g||g' $FILE
   ui_print " "
 fi
+if [ "`grep_prop dolby.game $OPTIONALS`" != 0 ]; then
+  sed -i 's|#x||g' $FILE
+else
+  ui_print "- Does not use Dolby Game patch & rerouting stream"
+  ui_print " "
+fi
 
 # settings
 FILE=$MODPATH/system/vendor/etc/dolby/dax-default.xml
@@ -919,7 +925,7 @@ fi
 # raw
 FILE=$MODPATH/.aml.sh
 if [ "`grep_prop disable.raw $OPTIONALS`" == 0 ]; then
-  ui_print "- Not disables Ultra Low Latency playback (RAW)"
+  ui_print "- Does not disable Ultra Low Latency playback (RAW)"
   ui_print " "
 else
   sed -i 's|#u||g' $FILE
