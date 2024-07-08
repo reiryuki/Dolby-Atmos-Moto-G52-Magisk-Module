@@ -42,7 +42,7 @@
 - If you are using KernelSU, you need to allow superuser list manually all package name listed in package.txt (and your home launcher app also) (enable show system apps) and reboot afterwards
 - If you are using SUList, you need to allow list manually your home launcher app (enable show system apps) and reboot afterwards
 - If options doesn't show up in Bluetooth audio, try disconnect and reconnect the Bluetooth and restart the app
-- If you have brightness or sensors issue (fingerprint, proximity, gyroscope, etc), then READ Optionals bellow!
+- If you have sensors issue (fingerprint, proximity, gyroscope, etc), then READ Optionals bellow!
 
 ## Optionals
 - https://t.me/androidryukimodsdiscussions/2616
