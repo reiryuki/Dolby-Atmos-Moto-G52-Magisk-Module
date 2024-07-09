@@ -844,9 +844,12 @@ if [ "$LIST32BIT" ]; then
   MODFILE=$MODPATH/system/vendor/lib/$NAME2
   rename_file
 fi
-FILE="$MODPATH/system/vendor/lib*/$NAME2
+if [ -f $MODPATH/system/vendor/lib64/$NAME2 ]\
+|| [ -f $MODPATH/system/vendor/lib/$NAME2 ]; then
+  FILE="$MODPATH/system/vendor/lib*/$NAME2
 $MODPATH/system/vendor/lib*/vendor.dolby.hardware.dms@2.0.so"
-change_name
+  change_name
+fi
 NAME=libstagefright_foundation.so
 NAME2=libstagefright_fdtn_dolby.so
 if [ "$IS64BIT" == true ]; then
