@@ -21,8 +21,8 @@
 - https://t.me/androidryukimodsdiscussions/108103
 
 ## Requirements
-- Android 11 and up
-- Architecture 64 bit
+- ARM64 architecture
+- Android 11 (SDK 30) and up
 - Magisk or KernelSU installed (Recommended to use Magisk Delta/Kitsune Mask for systemless early init mount manifest.xml if your ROM is Read-Only https://t.me/androidryukimodsdiscussions/100091)
 - Moto Core Magisk Module installed https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
 
@@ -45,30 +45,27 @@
 - If you have sensors issue (fingerprint, proximity, gyroscope, etc), then READ Optionals bellow!
 
 ## Optionals
-- https://t.me/androidryukimodsdiscussions/2616
+- https://t.me/ryukinotes/8
 - Global: https://t.me/androidryukimodsdiscussions/60861
 - Stream: https://t.me/androidryukimodsdiscussions/26764
 
 ## Troubleshootings
-- https://t.me/androidryukimodsdiscussions/2617
+- https://t.me/ryukinotes/10
+- https://t.me/ryukinotes/11
 - Global: https://t.me/androidryukimodsdiscussions/29836
 
 ## Support & Bug Report
 - https://t.me/androidryukimodsdiscussions/2618
 - If you don't do above, issues will be closed immediately
 
-## Tested on
-- Android 12.1 Nusantara ROM
-- Android 13 Nusantara ROM, CrDroid ROM, & AlphaDroid ROM
-- Android 14 LineageOS ROM
-
 ## Credits and Contributors
+- @HuskyDG
 - https://t.me/viperatmos
 - https://t.me/androidryukimodsdiscussions
 - @HELLBOY017
 - You can contribute ideas about this Magisk Module here: https://t.me/androidappsportdevelopment
 
 ## Sponsors
-- https://t.me/androidryukimodsdiscussions/2619
+- https://t.me/ryukinotes/25
 
 
