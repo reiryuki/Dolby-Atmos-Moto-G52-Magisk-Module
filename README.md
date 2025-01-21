@@ -24,14 +24,14 @@
 ## Requirements
 - arm64-v8a architecture
 - Android 11 (SDK 30) and up
-- Magisk or KernelSU installed (Recommended to use Magisk Delta/Kitsune Mask for systemless early init mount manifest.xml if your ROM is Read-Only https://t.me/androidryukimodsdiscussions/100091)
+- Magisk or KernelSU installed (Recommended to use Magisk Delta/Kitsune Mask for systemless early init mount manifest.xml if your ROM is Read-Only https://t.me/ryukinotes/49)
 - Moto Core Magisk Module installed https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
 
 ## WARNING!!!
 - Possibility of bootloop or even softbrick or a service failure on Read-Only ROM if you don't use Magisk Delta/Kitsune Mask.
 
 ## Installation Guide & Download Link
-- Recommended to use Magisk Delta/Kitsune Mask https://t.me/androidryukimodsdiscussions/100091
+- Recommended to use Magisk Delta/Kitsune Mask https://t.me/ryukinotes/49
 - Remove any other else Dolby MAGISK MODULE with different name (no need to remove if it's the same name)
 - Reboot
 - Install Moto Core Magisk Module first: https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
@@ -48,7 +48,7 @@
 ## Optionals
 - https://t.me/ryukinotes/8
 - Global: https://t.me/ryukinotes/35
-- Stream: https://t.me/androidryukimodsdiscussions/26764
+- Stream: https://t.me/ryukinotes/52
 
 ## Troubleshootings
 - https://t.me/ryukinotes/10
@@ -56,7 +56,7 @@
 - Global: https://t.me/ryukinotes/34
 
 ## Support & Bug Report
-- https://t.me/androidryukimodsdiscussions/2618
+- https://t.me/ryukinotes/54
 - If you don't do above, issues will be closed immediately
 
 ## Credits and Contributors
