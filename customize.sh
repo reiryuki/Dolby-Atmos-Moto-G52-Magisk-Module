@@ -1201,6 +1201,8 @@ $MODPATH/system/vendor/bin/hw/vendor.dolby*.hardware.dms*@*-service"
   change_name
   NAME=d53e26da0253
   change_name
+  NAME=ef937f675587
+  change_name
 fi
 
 # fix sensor

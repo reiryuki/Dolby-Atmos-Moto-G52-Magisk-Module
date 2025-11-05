@@ -37,6 +37,7 @@ sed -i 's|uuid removed||g' $MODAEC
 sed -i "/^        removed {/ {;N s/        removed {\n        }//}" $MODAEC
 sed -i 's|removed { }||g' $MODAEC
 sed -i 's|removed {}||g' $MODAEC
+sed -i '/^[[:space:]]*$/d' $MODAEC
 }
 remove_xml() {
 for RMV in $RMVS; do
@@ -56,6 +57,7 @@ sed -i 's|<effect name="removed" uuid="removed" library="removed" />||g' $MODAEX
 sed -i 's|<libsw library="removed" uuid="removed" />||g' $MODAEX
 sed -i 's|<libhw library="removed" uuid="removed" />||g' $MODAEX
 sed -i 's|<apply effect="removed" />||g' $MODAEX
+sed -i '/^[[:space:]]*$/d' $MODAEX
 }
 
 # store
@@ -164,7 +166,7 @@ for MODAEX in $MODAEXS; do
     sed -i "s|<apply effect=\"$RMV\" />||g" $MODAEX
   done
   if ! grep -q '<postprocess>' $MODAEX\
-  || grep -q '<!-- Audio post processor' $MODAEX; then
+  || grep -q 'Audio post processor configurations' $MODAEX; then
     sed -i '/<\/effects>/a\
     <postprocess>\
         <stream type="music">\
@@ -257,6 +259,10 @@ for MODAEX in $MODAEXS; do
       sed -i "/<postprocess>/a\        <stream type=\"music\">\n        <\/stream>" $MODAEX
     fi
   fi
+  sed -i 's|Audio post processor configurations|Ryuki Mod Edit|g' $MODAEX
+  sed -i 's|YunMang.Xiao@PSW.MM.Dolby|Ryuki Mod Edit|g' $MODAEX
+  sed -i 's|WuHao@MULTIMEDIA.AUDIOSERVER.EFFECT|Ryuki Mod Edit|g' $MODAEX
+  sed -i 's|heaton.zhong|Ryuki Mod Edit|g' $MODAEX
 done
 
 # function
@@ -267,6 +273,7 @@ LIBNAME=dap_mod
 NAME=dap
 NAME=dap_mod
 UUID=9d4921da-8225-4f29-aefa-39537a04bcaa
+TYPE=46d279d9-9be7-453d-9d7c-ef937f675587
 RMVS="$LIB $LIBNAME $NAME $UUID"
 archdir
 if [ "$ARCHDIR" ]; then
@@ -319,6 +326,7 @@ LIBNAME=vqe_mod
 NAME=vqe
 NAME=vqe_mod
 UUID=64a0f614-7fa4-48b8-b081-d59dc954616f
+TYPE=733fefa3-667e-44e4-a1a5-4a3d4c980f50
 RMVS="$LIB $LIBNAME $NAME $UUID"
 archdir
 if [ "$ARCHDIR" ]; then
@@ -341,6 +349,7 @@ LIBNAME=gamedap_mod
 NAME=gamedap
 NAME=gamedap_mod
 UUID=3783c334-d3a0-4d13-874f-0032e5fb80e2
+TYPE=12ea851f-0e12-4bde-a5e5-71f5651e9f96
 RMVS="$LIB $LIBNAME $NAME $UUID"
 archdir
 if [ "$ARCHDIR" ]; then
