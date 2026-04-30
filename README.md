@@ -26,6 +26,7 @@
 
 v5.5
 - Update libmagiskpolicy.so from Magisk (stable) 30.7 (30700) (fixes selinux denials in KernelSU)
+- Does not disable raw playback (You can use Audio Compatibility Patch Reborn Magisk Module instead)
 
 v5.4
 - Fix wrong target in latest KernelSU
