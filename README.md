@@ -7,7 +7,6 @@
 ## Descriptions
 - Equalizer sound effect ported from Motorola Moto G52 (rhode) and integrated as a Magisk Module for all supported and rooted devices with Magisk
 - Global type sound effect
-- Doesn't support auxiliary cable
 - Conflicted with `vendor.dolby_v3_6.hardware.dms360@2.0-service`, `vendor.dolby_sp.hardware.dmssp@2.0-service`, & `vendor.dolby.hardware.dms@1.0-service`
 
 ## Sources
@@ -19,10 +18,13 @@
 - android.hardware.audio.effect@*-impl.so: https://dumps.tadiphone.dev/dumps/oneplus/op594dl1 qssi-user-14-UKQ1.230924.001-1701915639192-release-keys--US
 - libmagiskpolicy.so: Magisk (stable) 30.7 (30700)
 
-## Screenshots
-- https://t.me/androidryukimodsdiscussions/108103
-
 ## Changelog
+
+v5.6
+- Support NoMount metamodule
+- Resets module folders/files permissions at post-fs-data
+- Move _uninstall.log to /data/adb/logs/
+- Hides LunarisDolby.apk
 
 v5.5
 - Update libmagiskpolicy.so from Magisk (stable) 30.7 (30700) (fixes selinux denials in KernelSU)
@@ -37,7 +39,7 @@ v5.3
 
 v5.2
 - Tidy up aml.sh
-- Exclude audioeffectshaptic.xml
+- Exclude \*audio\*effects\*haptic\*.xml
 - Fix wrong file permissions in some ROMs
 
 v5.1
@@ -63,8 +65,8 @@ v4.7
 - Fix architecture detection in some weird ROMs
 - Fix bug in uninstall.sh
 
-v4.6
-- Fix missing/unaccessible libsqlite.so in some Android 15 ROMs
+## Screenshots
+https://t.me/androidryukimodsdiscussions/108103
 
 ## Requirements
 - arm64-v8a architecture
@@ -74,16 +76,16 @@ v4.6
 - Moto Core Magisk Module installed https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
 
 ## WARNING!!!
-- Possibility of bootloop or even softbrick or a service failure on Read-Only ROM if you don't use Magisk Delta/Kitsune Mask.
+Possibility of bootloop or even softbrick or a service failure on Read-Only ROM if you don't use Magisk Delta/Kitsune Mask.
 
 ## Installation Guide & Download Link
 - Recommended to use Magisk Delta/Kitsune Mask https://t.me/ryukinotes/49
 - Remove any other else Dolby MAGISK MODULE with different name (no need to remove if it's the same name)
 - Reboot
-- If you are using KernelSU, you need to disable Unmount Modules by Default in KernelSU app settings and install https://github.com/KernelSU-Modules-Repo/meta-overlayfs or https://github.com/KernelSU-Modules-Repo/magic_mount_rs or https://github.com/KernelSU-Modules-Repo/hybrid_mount first depending on ROM compatibility
+- If you are using KernelSU, you need to disable Unmount Modules by Default in KernelSU app settings and install https://github.com/KernelSU-Modules-Repo/meta-overlayfs or https://github.com/KernelSU-Modules-Repo/magic_mount_rs or https://github.com/KernelSU-Modules-Repo/hybrid_mount or https://github.com/maxsteeel/nomount first depending on ROM compatibility
 - Install Moto Core Magisk Module first: https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
 - If you have Dolby in-built in your ROM, then you need to activate data.cleanup=1 at the first time install (READ Optionals bellow!)
-- Install this module https://devuploads.com/4eo50db90jvp via Magisk app or Kitsune Mask app or KernelSU app or Apatch app or Recovery if Magisk or Kitsune Mask installed
+- Install this module via Magisk app or Kitsune Mask app or KernelSU app or Apatch app or Recovery if Magisk or Kitsune Mask installed
 - Install AML Magisk Module https://t.me/ryukinotes/34 only if using any other else audio mod module
 - Reboot
 - If you are using KernelSU, you need to allow superuser list manually all package name listed in package.txt (and your home launcher app also) (enable show system apps) and reboot afterwards
@@ -113,6 +115,6 @@ v4.6
 - You can contribute ideas about this Magisk Module here: https://t.me/androidappsportdevelopment
 
 ## Sponsors
-- https://t.me/ryukinotes/25
+https://t.me/ryukinotes/25
 
 
