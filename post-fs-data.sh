@@ -74,6 +74,15 @@ FILE=$MODPATH/sepolicy.rule
 FILE=$MODPATH/sepolicy.pfsd
 sepolicy_sh
 
+# conflict
+NAMES="ainur_narsil zyx_ainur_silmaril"
+for NAME in $NAMES; do
+  DIR=/data/adb/modules/$NAME
+  if [ -d $DIR ] && [ ! -f $DIR/remove ]; then
+    touch $DIR/remove
+  fi
+done
+
 # run
 . $MODPATH/copy.sh
 . $MODPATH/.aml.sh
@@ -95,18 +104,11 @@ chcon -R u:object_r:system_lib_file:s0 $MODPATH/system/lib*
 chcon -R u:object_r:vendor_configs_file:s0 $MODPATH/system/odm/etc
 chmod 0751 $MODPATH$MODSYSTEM/vendor/bin
 chmod 0751 $MODPATH$MODSYSTEM/vendor/bin/hw
-chmod 0755 $MODPATH$MODSYSTEM/vendor/odm/bin
-chmod 0755 $MODPATH$MODSYSTEM/vendor/odm/bin/hw
 FILES=`find $MODPATH$MODSYSTEM/vendor/bin\
             $MODPATH$MODSYSTEM/vendor/odm/bin -type f`
 for FILE in $FILES; do
   chmod 0755 $FILE
   chown 0.2000 $FILE
-done
-FILES=`find $MODPATH$MODSYSTEM/vendor/lib* -type f`
-for FILE in $FILES; do
-  chmod 0644 $FILE
-  chown 0.0 $FILE
 done
 chcon -R u:object_r:vendor_file:s0 $MODPATH$MODSYSTEM/vendor
 chcon -R u:object_r:vendor_configs_file:s0 $MODPATH$MODSYSTEM/vendor/etc
@@ -114,6 +116,10 @@ chcon -R u:object_r:vendor_configs_file:s0 $MODPATH$MODSYSTEM/vendor/odm/etc
 chcon u:object_r:vendor_hal_file:s0 $MODPATH$MODSYSTEM/vendor/lib*/hw
 #chcon u:object_r:hal_dms_default_exec:s0 $MODPATH$MODSYSTEM/vendor/bin/hw/vendor.dolby*.hardware.dms*@*-service
 #chcon u:object_r:hal_dms_default_exec:s0 $MODPATH$MODSYSTEM/vendor/odm/bin/hw/vendor.dolby*.hardware.dms*@*-service
+NAMES="libhwbinder libhidl*.so libut*.so"
+for NAME in $NAMES; do
+  chcon u:object_r:same_process_hal_file:s0 $MODPATH$MODSYSTEM/vendor/lib*/$NAME
+done
 
 # function
 mount_odm() {
