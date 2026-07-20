@@ -20,6 +20,10 @@
 
 ## Changelog
 
+v5.8
+- Fix manifest.xml detection bug in some ROMs
+- Fix sepolicy denial
+
 v5.7
 - Removes conflicted weird modules
 - Check functions in mirror /apex files instead of mirror /system if exist
@@ -30,7 +34,7 @@ v5.6
 - Support NoMount metamodule
 - Resets module folders/files permissions at post-fs-data
 - Move _uninstall.log to /data/adb/logs/
-- Hides LunarisDolby.apk
+- Hides in-bulit LunarisDolby.apk
 
 v5.5
 - Update libmagiskpolicy.so from Magisk (stable) 30.7 (30700) (fixes selinux denials in KernelSU)
@@ -62,9 +66,6 @@ v4.9
 - Fix script bug at installation for libsqlite.so detections
 - Fix selinux denials
 
-v4.8
-- Modifies all blobs (if dolby.mod=1) to fix conflict with in-built Dolby
-
 ## Screenshots
 https://t.me/androidryukimodsdiscussions/108103
 
@@ -85,7 +86,7 @@ Possibility of bootloop or even softbrick or a service failure on Read-Only ROM 
 - If you are using KernelSU, you need to disable Unmount Modules by Default in KernelSU app settings and install https://github.com/KernelSU-Modules-Repo/meta-overlayfs or https://github.com/KernelSU-Modules-Repo/magic_mount_rs or https://github.com/KernelSU-Modules-Repo/hybrid_mount or https://github.com/maxsteeel/nomount first depending on ROM compatibility
 - Install Moto Core Magisk Module first: https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
 - If you have Dolby in-built in your ROM, then you need to activate data.cleanup=1 at the first time install (READ Optionals bellow!)
-- Install this module https://devuploads.com/i4itg9hem630 via Magisk app or Kitsune Mask app or KernelSU app or Apatch app or Recovery if Magisk or Kitsune Mask installed
+- Install this module https://github.com/reiryuki/Dolby-Atmos-Moto-G52-Magisk-Module via Magisk app or Kitsune Mask app or KernelSU app or Apatch app or Recovery if Magisk or Kitsune Mask installed
 - Install AML Magisk Module https://t.me/ryukinotes/34 only if using any other else audio mod module
 - Reboot
 - If you are using KernelSU, you need to allow superuser list manually all package name listed in package.txt (and your home launcher app also) (enable show system apps) and reboot afterwards
